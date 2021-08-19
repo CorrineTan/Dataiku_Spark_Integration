@@ -12,9 +12,6 @@ RUN wget $SPARK_URL
 WORKDIR /home/dataiku
 USER dataiku
 
-ENV SPARK_HOME "/home/dataiku/dss/bin"
-ENV DKU_ADMIN "/home/dataiku/dss/bin/dssadmin"
-
 RUN $DKU_ADMIN install-spark-integration -sparkHome $SPARK_HOME -standaloneArchive $SPARK_ARCHIVE
 
 COPY run.sh /home/dataiku/
