@@ -16,4 +16,5 @@ COPY run.sh /home/dataiku/
 
 EXPOSE $DSS_PORT
 
+RUN chmod +x /home/dataiku/run.sh
 CMD [ "/home/dataiku/run.sh" ]
