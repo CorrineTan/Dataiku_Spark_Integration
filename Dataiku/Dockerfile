@@ -12,8 +12,6 @@ RUN wget $SPARK_URL
 WORKDIR /home/dataiku
 USER dataiku
 
-RUN $DKU_ADMIN install-spark-integration -sparkHome $SPARK_HOME -standaloneArchive $SPARK_ARCHIVE
-
 COPY run.sh /home/dataiku/
 
 EXPOSE $DSS_PORT
