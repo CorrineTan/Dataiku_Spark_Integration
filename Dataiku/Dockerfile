@@ -9,7 +9,6 @@ ENV SPARK_URL "https://downloads.dataiku.com/public/dss/8.0.7/${SPARK_ARCHIVE}"
 RUN yum install wget -y
 RUN wget $SPARK_URL
 
-RUN chmod +x /home/dataiku/run.sh
 
 WORKDIR /home/dataiku
 USER dataiku
@@ -18,4 +17,8 @@ COPY run.sh /home/dataiku/
 
 EXPOSE $DSS_PORT
 
+USER root
+RUN chmod +x /home/dataiku/run.sh
+
+USER dataiku
 CMD [ "/home/dataiku/run.sh" ]
