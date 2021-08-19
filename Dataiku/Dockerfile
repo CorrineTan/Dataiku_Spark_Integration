@@ -6,7 +6,8 @@ ENV SPARK_ARCHIVE = "dataiku-dss-spark-standalone-8.0.7-2.4.5-generic-hadoop3.ta
 ENV SPARK_URL = "https://downloads.dataiku.com/public/dss/8.0.7/$SPARK_ARCHIVE"
 
 
-RUN yum install wget && wget $SPARK_URL
+RUN yum install wget
+RUN wget $SPARK_URL
 
 WORKDIR /home/dataiku
 USER dataiku
