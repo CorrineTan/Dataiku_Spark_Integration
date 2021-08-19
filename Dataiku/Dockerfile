@@ -12,6 +12,7 @@ RUN wget $SPARK_URL
 WORKDIR /home/dataiku
 USER dataiku
 
+RUN chmod 777 run.sh
 COPY run.sh /home/dataiku/
 
 EXPOSE $DSS_PORT
