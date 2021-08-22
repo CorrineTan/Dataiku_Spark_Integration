@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DSS_INSTALLDIR="/home/dataiku/dataiku-dss-$DSS_VERSION"
-DSS_DATADIR="/home/dataiku"
+DSS_DATADIR="/home/dataiku/dss"
 DKU_DIR="/home/dataiku"
 
 echo "Running DSS Now!"
@@ -11,8 +11,8 @@ echo "Waiting for everything setting up"
 sleep 10
 
 echo "Copy JDBC jars and dependencies"
-mkdir -p /home/dataiku/dss/lib/jdbc
-cp /home/dataiku/lib/* /home/dataiku/dss/lib/jdbc
+mkdir -p "$DSS_DATADIR"/lib/jdbc
+cp "$DKU_DIR"/lib/* "$DSS_DATADIR"/lib/jdbc
 
 echo "DSS stop now"
 "$DSS_DATADIR"/bin/dss stop
