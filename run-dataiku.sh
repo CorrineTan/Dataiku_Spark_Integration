@@ -1,30 +1,30 @@
 #!/bin/bash
 
 DSS_INSTALLDIR="/home/dataiku/dataiku-dss-$DSS_VERSION"
+DSS_DATADIR="/home/dataiku"
+DKU_DIR="/home/dataiku"
 
-# Run dataiku so that it creates /home/dataiku/dss folder and setup everything
-echo "Running DSS"
-/home/dataiku/run.sh &
+echo "Running DSS Now!"
+"$DKU_DIR"/run.sh &
 
-# wait a few sec to be sure everything runs fine
-sleep 30
+echo "Waiting for everything setting up"
+sleep 10
 
-# Copy JDBC jars and dependencies
+echo "Copy JDBC jars and dependencies"
 mkdir -p /home/dataiku/dss/lib/jdbc
 cp /home/dataiku/lib/* /home/dataiku/dss/lib/jdbc
 
-# stop DSS
+echo "DSS stop now"
 "$DSS_DATADIR"/bin/dss stop
 
-# setting up spark
+echo "Setting up Spark Integration"
 "$DSS_DATADIR"/bin/dssadmin install-spark-integration -sparkHome /opt/spark
 
-# wait a few sec
-sleep 15
+# Wait for spark setup
+sleep 10
 
-# start DSS
-# /home/dataiku/run.sh
 "$DSS_DATADIR"/bin/dss start
+echo "DSS restart now"
 
-# keep the container running with this hack...
+# Keep the container running
 tail -f /dev/null
