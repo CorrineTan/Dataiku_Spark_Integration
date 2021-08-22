@@ -4,9 +4,6 @@ MAINTAINER Corrine Tan <tenglunt@gmail.com>
 
 USER root
 
-ENV SPARK_VERSION=3.1.1
-ENV HADOOP_VERSION=3.2
-
 RUN yum update -y && yum install -y wget
 
 RUN wget http://apache.mirrors.tds.net/hadoop/common/hadoop-3.2.1/hadoop-3.2.1.tar.gz && \
