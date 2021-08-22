@@ -1,46 +1,45 @@
 FROM dataiku/dss:8.0.2
 
-USER root
-
-ENV ENABLE_INIT_DAEMON true
-ENV INIT_DAEMON_BASE_URI http://identifier/init-daemon
-ENV INIT_DAEMON_STEP spark_master_init
-ENV SPARK_VERSION "3.1.1"
-ENV HADOOP_VERSION "3.2"
-ENV SPARK_ARCHIVE "spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz"
-ENV SPARK_URL "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz"
-
-COPY wait-for-step.sh /
-COPY execute-step.sh /
-COPY finish-step.sh /
-
-
-RUN apk add --no-cache curl bash openjdk8-jre python3 py-pip nss libc6-compat \
-      && ln -s /lib64/ld-linux-x86-64.so.2 /lib/ld-linux-x86-64.so.2 \
-      && chmod +x *.sh \
-      && wget ${SPARK_URL}
-      && tar -xvzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
-      && mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark \
-      && rm spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
-      && cd /
-
-RUN chmod +x /wait-for-step.sh && chmod +x /execute-step.sh && chmod +x /finish-step.sh
-ENV PYTHONHASHSEED 1
-
-
-RUN yum install wget -y
-RUN wget $SPARK_URL
-
-
-WORKDIR /home/dataiku
-USER dataiku
-
-COPY run.sh /home/dataiku/
-
-EXPOSE $DSS_PORT
+MAINTAINER Corrine Tan <tenglunt@gmail.com>
 
 USER root
-RUN chmod +x /home/dataiku/run.sh
+
+ENV SPARK_VERSION=3.1.1
+ENV HADOOP_VERSION=3.2
+
+RUN apt-get update && apt-get install -y wget
+
+RUN wget http://apache.mirrors.tds.net/hadoop/common/hadoop-3.2.1/hadoop-3.2.1.tar.gz && \
+      mkdir -p /etc/hadoop && \
+      tar -xzf hadoop-3.2.1.tar.gz -C /etc/hadoop --strip-components=1
+
+RUN wget https://archive.apache.org/dist/spark/spark-3.0.2/spark-3.0.2-bin-hadoop3.2.tgz && \
+      mkdir -p /opt/spark && \
+      tar -xzf spark-3.0.2-bin-hadoop3.2.tgz -C /opt/spark --strip-components=1
+
+COPY run-dataiku.sh /home/dataiku
+RUN chown dataiku:dataiku /home/dataiku/run-dataiku.sh && \
+  chmod 755 /home/dataiku/run-dataiku.sh
 
 USER dataiku
-CMD [ "/home/dataiku/run.sh" ]
+
+RUN mkdir /home/dataiku/lib/
+RUN wget http://central.maven.org/maven2/org/apache/hive/hive-common/1.1.0/hive-common-1.1.0.jar -P /home/dataiku/lib/ && \
+  wget http://central.maven.org/maven2/org/apache/hive/hive-jdbc/1.1.0/hive-jdbc-1.1.0.jar -P /home/dataiku/lib/ && \
+  wget http://central.maven.org/maven2/org/apache/hive/hive-service/1.1.0/hive-service-1.1.0.jar -P /home/dataiku/lib/ && \
+  wget http://central.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.3/httpclient-4.5.3.jar -P /home/dataiku/lib/ && \
+  wget http://central.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.7/httpcore-4.4.7.jar -P /home/dataiku/lib/ && \
+  wget http://central.maven.org/maven2/org/apache/thrift/libthrift/0.10.0/libthrift-0.10.0.jar -P /home/dataiku/lib/
+
+
+ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/
+ENV PATH $PATH:/etc/hadoop/bin/:/etc/hadoop/sbin:/opt/spark/bin
+ENV HADOOP_CONF_DIR /etc/hadoop/conf
+ENV HIVE_CONF_DIR /etc/hadoop/conf
+ENV HADOOP_HOME /etc/hadoop
+ENV HADOOP_LIB_EXEC /etc/hadoop/libexec/
+ENV SPARK_HOME /opt/spark
+
+ENTRYPOINT ["/home/dataiku/run-dataiku.sh"]
+
+ENTRYPOINT ["/home/dataiku/run-dataiku.sh"]

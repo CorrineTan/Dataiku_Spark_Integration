@@ -155,7 +155,7 @@ services:
 
     dataiku:
         build:
-            context: ../Dataiku_Cluster
+            context: .
         container_name: dataiku_spark
         depends_on:
             - spark-master
