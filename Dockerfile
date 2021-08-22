@@ -12,7 +12,6 @@ ENV LIB_HOME /home/dataiku/lib/
 ENV HADOOP_CONF_DIR /etc/hadoop/conf
 ENV HIVE_CONF_DIR /etc/hadoop/conf
 ENV HADOOP_LIB_EXEC /etc/hadoop/libexec/
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/jre/
 ENV PATH $PATH:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$SPARK_HOME/bin
 
 RUN wget http://apache.mirrors.tds.net/hadoop/common/hadoop-3.2.1/hadoop-3.2.1.tar.gz && \
