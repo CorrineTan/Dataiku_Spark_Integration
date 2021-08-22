@@ -3,6 +3,7 @@
 DSS_INSTALLDIR="/home/dataiku/dataiku-dss-$DSS_VERSION"
 DSS_DATADIR="/home/dataiku/dss"
 DKU_DIR="/home/dataiku"
+SPARK_HOME="/opt/spark"
 
 echo "Running DSS Now!"
 "$DKU_DIR"/run.sh &
@@ -18,7 +19,7 @@ echo "DSS stop now"
 "$DSS_DATADIR"/bin/dss stop
 
 echo "Setting up Spark Integration"
-"$DSS_DATADIR"/bin/dssadmin install-spark-integration -sparkHome /opt/spark
+"$DSS_DATADIR"/bin/dssadmin install-spark-integration -sparkHome "$SPARK_HOME"
 
 # Wait for spark setup
 sleep 10
