@@ -7,7 +7,7 @@ USER root
 ENV SPARK_VERSION=3.1.1
 ENV HADOOP_VERSION=3.2
 
-RUN apt-get update && apt-get install -y wget
+RUN yum update -y && yum install -y wget
 
 RUN wget http://apache.mirrors.tds.net/hadoop/common/hadoop-3.2.1/hadoop-3.2.1.tar.gz && \
       mkdir -p /etc/hadoop && \
