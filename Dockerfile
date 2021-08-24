@@ -16,7 +16,7 @@ ENV PATH $PATH:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$SPARK_HOME/bin
 
 RUN wget https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-common/2.7.7/hadoop-common-2.7.7.jar && \
       mkdir -p $HADOOP_HOME && \
-      tar -xzf hadoop-2.7.7.tar.gz -C $HADOOP_HOME --strip-components=1
+      tar -xzf hadoop-common-2.7.7.jar -C $HADOOP_HOME --strip-components=1
 
 RUN wget https://archive.apache.org/dist/spark/spark-2.4.8/spark-2.4.8-bin-hadoop2.7.tgz && \
     mkdir -p $SPARK_HOME && \
