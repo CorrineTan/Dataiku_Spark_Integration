@@ -18,9 +18,9 @@ RUN wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.7/hadoop-2.7.7
     mkdir -p $HADOOP_HOME && \
     tar -xzf hadoop-2.7.7.tar.gz -C $HADOOP_HOME --strip-components=1
 
-RUN wget https://archive.apache.org/dist/spark/spark-2.4.8/spark-2.4.8-bin-hadoop2.7.tgz && \
+RUN wget https://archive.apache.org/dist/spark/spark-3.0.0/spark-3.0.0-bin-hadoop3.2.tgz && \
     mkdir -p $SPARK_HOME && \
-    tar -xzf spark-2.4.8-bin-hadoop2.7.tgz -C $SPARK_HOME --strip-components=1
+    tar -xzf spark-3.0.0-bin-hadoop3.2.tgz -C $SPARK_HOME --strip-components=1
 
 COPY run-dataiku.sh /home/dataiku
 RUN chown dataiku:dataiku /home/dataiku/run-dataiku.sh && \
