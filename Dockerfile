@@ -14,7 +14,7 @@ ENV HIVE_CONF_DIR /etc/hadoop/conf
 ENV HADOOP_LIB_EXEC /etc/hadoop/libexec/
 ENV PATH $PATH:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$SPARK_HOME/bin
 
-RUN wget http://apache.mirrors.tds.net/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz && \
+RUN wget https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-common/2.7.7/hadoop-common-2.7.7.jar && \
       mkdir -p $HADOOP_HOME && \
       tar -xzf hadoop-2.7.7.tar.gz -C $HADOOP_HOME --strip-components=1
 
