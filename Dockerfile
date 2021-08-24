@@ -14,9 +14,9 @@ ENV HIVE_CONF_DIR /etc/hadoop/conf
 ENV HADOOP_LIB_EXEC /etc/hadoop/libexec/
 ENV PATH $PATH:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$SPARK_HOME/bin
 
-# RUN wget http://apache.mirrors.tds.net/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz && \
-#       mkdir -p $HADOOP_HOME && \
-#       tar -xzf hadoop-2.7.7.tar.gz -C $HADOOP_HOME --strip-components=1
+RUN wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz && \
+    mkdir -p $HADOOP_HOME && \
+    tar -xzf hadoop-2.7.7.tar.gz -C $HADOOP_HOME --strip-components=1
 
 RUN wget https://archive.apache.org/dist/spark/spark-2.4.8/spark-2.4.8-bin-hadoop2.7.tgz && \
     mkdir -p $SPARK_HOME && \
