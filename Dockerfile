@@ -52,7 +52,7 @@ RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
 
 # Install required R packages
 RUN mkdir -p /usr/local/lib/R/site-library \
-    && R --slave --no-restore --quiet --vanilla < myscript.R \
+    && R --slave --no-restore --quiet \
         -e "install.packages( \
             c('httr', 'RJSONIO', 'dplyr', 'curl', 'IRkernel', 'sparklyr', 'ggplot2', 'gtools', 'tidyr', \
             'rmarkdown', 'base64enc', 'filelock'), \
