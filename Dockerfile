@@ -14,7 +14,7 @@ RUN useradd dataiku \
     && chown -Rh dataiku:dataiku /home/dataiku ${DSS_DATADIR}
 
 # System dependencies
-RUN yum install -y \
+RUN yum install -y -nv \
         epel-release \
     && yum install -y \
         wget \
@@ -71,12 +71,12 @@ ENV HADOOP_CONF_DIR /etc/hadoop/conf
 ENV HADOOP_LIB_EXEC /etc/hadoop/libexec
 
 # Downlaod hadoop and spark pre-build binaries
-RUN wget "$HADOOP_URL" \
+RUN wget -nv "$HADOOP_URL" \
     && mkdir -p $HADOOP_HOME \
     && tar -xzf "$HADOOP_ARCHIVE" -C $HADOOP_HOME --strip-components=1 \
     && rm "$HADOOP_ARCHIVE"
 
-RUN wget "$SPARK_URL" \
+RUN wget -nv "$SPARK_URL" \
     && mkdir -p $SPARK_HOME \
     && tar -xzf "$SPARK_ARCHIVE" -C $SPARK_HOME --strip-components=1 \
     && rm "$SPARK_ARCHIVE"
