@@ -70,10 +70,6 @@ ENV HADOOP_HOME /etc/hadoop
 ENV HADOOP_CONF_DIR /etc/hadoop/conf
 ENV HADOOP_LIB_EXEC /etc/hadoop/libexec
 
-
-WORKDIR /home/dataiku
-USER dataiku
-
 # Downlaod hadoop and spark pre-build binaries
 RUN wget "$HADOOP_URL" \
     && mkdir -p $HADOOP_HOME \
@@ -89,6 +85,9 @@ RUN wget "$SPARK_URL" \
 # ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/
 ENV PATH $PATH:$SPARK_HOME/bin:$HADOOP_HOME/bin
 ENV DKU_DIR /home/dataiku
+
+WORKDIR /home/dataiku
+USER dataiku
 
 COPY run.sh /home/dataiku/
 
