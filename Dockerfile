@@ -14,9 +14,9 @@ RUN useradd dataiku \
     && chown -Rh dataiku:dataiku /home/dataiku ${DSS_DATADIR}
 
 # System dependencies
-RUN yum install -y -nv \
+RUN yum install -y -q \
         epel-release \
-    && yum install -y \
+    && yum install -y -q \
         wget \
         file \
         acl \
