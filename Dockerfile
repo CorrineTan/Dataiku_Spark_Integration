@@ -77,12 +77,12 @@ USER dataiku
 # Downlaod hadoop and spark pre-build binaries
 RUN wget "$HADOOP_URL" \
     && mkdir -p $HADOOP_HOME \
-    && tar -xzf "$HADOOP_ARCHIVE" -C $HADOOP_HOME --strip-components=1
+    && tar -xzf "$HADOOP_ARCHIVE" -C $HADOOP_HOME --strip-components=1 \
     && rm "$HADOOP_ARCHIVE"
 
 RUN wget "$SPARK_URL" \
     && mkdir -p $SPARK_HOME \
-    && tar -xzf "$SPARK_ARCHIVE" -C $SPARK_HOME --strip-components=1
+    && tar -xzf "$SPARK_ARCHIVE" -C $SPARK_HOME --strip-components=1 \
     && rm "$SPARK_ARCHIVE"
 
 
