@@ -63,8 +63,8 @@ USER root
 
 ENV SPARK_ARCHIVE "spark-3.0.1-bin-hadoop3.2.tgz"
 ENV SPARK_URL "https://archive.apache.org/dist/spark/spark-3.0.1/${SPARK_ARCHIVE}"
-ENV HADOOP_ARCHIVE "dataiku-dss-hadoop-standalone-libs-generic-hadoop3-9.0.4.tar.gz"
-ENV HADOOP_URL "https://downloads.dataiku.com/public/dss/9.0.4/${HADOOP_ARCHIVE}"
+ENV HADOOP_ARCHIVE "hadoop-3.2.0.tar.gz"
+ENV HADOOP_URL "https://archive.apache.org/dist/hadoop/common/hadoop-3.2.0/${HADOOP_ARCHIVE}"
 ENV SPARK_HOME /opt/spark
 ENV HADOOP_HOME /etc/hadoop
 ENV HADOOP_CONF_DIR /etc/hadoop/conf
