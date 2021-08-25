@@ -154,7 +154,7 @@ services:
             - hadoop
 
     dataiku:
-        image: corrine/dkuspark
+        image: corrine/dkuspark:latest
         container_name: dataiku_spark
         depends_on:
             - spark-master
