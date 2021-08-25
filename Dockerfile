@@ -63,18 +63,12 @@ USER root
 
 ENV SPARK_ARCHIVE "spark-3.0.1-bin-hadoop3.2.tgz"
 ENV SPARK_URL "https://archive.apache.org/dist/spark/spark-3.0.1/${SPARK_ARCHIVE}"
-ENV HADOOP_ARCHIVE "hadoop-3.2.0.tar.gz"
-ENV HADOOP_URL "https://archive.apache.org/dist/hadoop/common/hadoop-3.2.0/${HADOOP_ARCHIVE}"
+ENV HADOOP_ARCHIVE "dataiku-dss-hadoop-standalone-libs-generic-hadoop3-9.0.4.tar.gz"
+ENV HADOOP_URL "https://downloads.dataiku.com/public/dss/9.0.4/${HADOOP_ARCHIVE}"
 ENV SPARK_HOME /opt/spark
-ENV HADOOP_HOME /etc/hadoop
-ENV HADOOP_CONF_DIR /etc/hadoop/conf
-ENV HADOOP_LIB_EXEC /etc/hadoop/libexec
 
-# Downlaod hadoop and spark pre-build binaries
-RUN wget -nv "$HADOOP_URL" \
-    && mkdir -p $HADOOP_HOME \
-    && tar -xzf "$HADOOP_ARCHIVE" -C $HADOOP_HOME --strip-components=1 \
-    && rm "$HADOOP_ARCHIVE"
+# Downlaod hadoop standalone archive and spark pre-build binaries
+RUN wget -nv "$HADOOP_URL" 
 
 RUN wget -nv "$SPARK_URL" \
     && mkdir -p $SPARK_HOME \
@@ -85,7 +79,7 @@ WORKDIR /home/dataiku
 USER dataiku
 
 # ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/
-ENV PATH $PATH:$SPARK_HOME/bin:$HADOOP_HOME/bin
+ENV PATH $PATH:$SPARK_HOME/bin
 ENV DKU_DIR /home/dataiku
 
 COPY run.sh /home/dataiku/
