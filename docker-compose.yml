@@ -154,8 +154,7 @@ services:
             - hadoop
 
     dataiku:
-        build:
-            context: .
+        image: newdataiku9:latest
         container_name: dataiku_spark
         depends_on:
             - spark-master
