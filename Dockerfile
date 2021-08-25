@@ -59,7 +59,8 @@ RUN mkdir -p /usr/local/lib/R/site-library \
             '/usr/local/lib/R/site-library', \
             repos='https://cloud.r-project.org')"
 
-USER root
+WORKDIR /home/dataiku
+USER dataiku
 
 ENV SPARK_ARCHIVE "spark-3.0.1-bin-hadoop3.2.tgz"
 ENV SPARK_URL "https://archive.apache.org/dist/spark/spark-3.0.1/${SPARK_ARCHIVE}"
@@ -86,8 +87,6 @@ RUN wget -nv "$SPARK_URL" \
 ENV PATH $PATH:$SPARK_HOME/bin:$HADOOP_HOME/bin
 ENV DKU_DIR /home/dataiku
 
-WORKDIR /home/dataiku
-USER dataiku
 
 COPY run.sh /home/dataiku/
 
