@@ -1,39 +1,84 @@
-FROM dataiku/dss:8.0.2
+FROM centos:7
 
 MAINTAINER Corrine Tan <tenglunt@gmail.com>
 
+ARG dssVersion=9.0.4
+
+ENV DSS_VERSION="$dssVersion" \
+    DSS_DATADIR="/home/dataiku/dss" \
+    DSS_PORT=10000
+
+# Dataiku account and data dir setup
+RUN useradd dataiku \
+    && mkdir -p /home/dataiku ${DSS_DATADIR} \
+    && chown -Rh dataiku:dataiku /home/dataiku ${DSS_DATADIR}
+
+# System dependencies
+RUN yum install -y \
+        epel-release \
+    && yum install -y \
+        wget \
+        file \
+        acl \
+        expat \
+        git \
+        nginx \
+        unzip \
+        zip \
+        java-1.8.0-openjdk \
+        python3 \
+        freetype \
+        libgfortran \
+        libgomp \
+        R-core-devel \
+        libicu-devel \
+        libcurl-devel \
+        openssl-devel \
+        libxml2-devel \
+        python-devel \
+        python3-devel \
+    && yum clean all
+
+# Download and extract DSS kit
+RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
+    && cd /home/dataiku \
+    && echo "+ Downloading kit" \
+    && curl -OsS "https://cdn.downloads.dataiku.com/public/studio/$DSS_VERSION/$DSSKIT.tar.gz" \
+    && echo "+ Extracting kit" \
+    && tar xf "$DSSKIT.tar.gz" \
+    && rm "$DSSKIT.tar.gz" \
+    && "$DSSKIT"/scripts/install/installdir-postinstall.sh "$DSSKIT" \
+    && chown -Rh dataiku:dataiku "$DSSKIT"
+
+# Install required R packages
+RUN mkdir -p /usr/local/lib/R/site-library \
+    && R --slave --no-restore \
+        -e "install.packages( \
+            c('httr', 'RJSONIO', 'dplyr', 'curl', 'IRkernel', 'sparklyr', 'ggplot2', 'gtools', 'tidyr', \
+            'rmarkdown', 'base64enc', 'filelock'), \
+            '/usr/local/lib/R/site-library', \
+            repos='https://cloud.r-project.org')"
+
 USER root
 
-RUN yum update -y && yum install -y wget
+ENV SPARK_ARCHIVE "dataiku-dss-spark-standalone-9.0.4-3.0.1-generic-hadoop3.tar.gz"
+ENV SPARK_URL "https://downloads.dataiku.com/public/dss/9.0.4/${SPARK_ARCHIVE}"
+ENV HADOOP_ARCHIVE "dataiku-dss-hadoop-standalone-libs-generic-hadoop3-9.0.4.tar.gz"
+ENV HADOOP_URL "https://downloads.dataiku.com/public/dss/9.0.4/${HADOOP_ARCHIVE}"
 
-ENV SPARK_HOME /opt/spark
-ENV HADOOP_HOME /etc/hadoop
-ENV LIB_HOME /home/dataiku/lib/
-ENV HADOOP_CONF_DIR /etc/hadoop/conf
-ENV HIVE_CONF_DIR /etc/hadoop/conf
-ENV HADOOP_LIB_EXEC /etc/hadoop/libexec/
-ENV PATH $PATH:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$SPARK_HOME/bin
 
-RUN wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz && \
-    mkdir -p $HADOOP_HOME && \
-    tar -xzf hadoop-2.7.7.tar.gz -C $HADOOP_HOME --strip-components=1
-
-RUN wget https://archive.apache.org/dist/spark/spark-2.4.8/spark-2.4.8-bin-hadoop2.7.tgz && \
-    mkdir -p $SPARK_HOME && \
-    tar -xzf spark-2.4.8-bin-hadoop2.7.tgz -C $SPARK_HOME --strip-components=1
-
-COPY run-dataiku.sh /home/dataiku
-RUN chown dataiku:dataiku /home/dataiku/run-dataiku.sh && \
-    chmod 777 /home/dataiku/run-dataiku.sh
-
+WORKDIR /home/dataiku
 USER dataiku
 
-RUN mkdir /home/dataiku/lib/
-RUN wget https://repo1.maven.org/maven2/org/apache/hive/hive-common/2.3.3/hive-common-2.3.3.jar -P $LIB_HOME && \
-    wget https://repo1.maven.org/maven2/org/apache/hive/hive-jdbc/2.3.3/hive-jdbc-2.3.3.jar -P $LIB_HOME && \
-    wget https://repo1.maven.org/maven2/org/apache/hive/hive-service/2.3.3/hive-service-2.3.3.jar -P $LIB_HOME && \
-    wget https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.6/httpclient-4.5.6.jar -P $LIB_HOME && \
-    wget https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.10/httpcore-4.4.10.jar -P $LIB_HOME && \
-    wget https://repo1.maven.org/maven2/org/apache/thrift/libthrift/0.12.0/libthrift-0.12.0.jar -P $LIB_HOME
+RUN wget "$SPARK_URL"
+RUN wget "$HADOOP_URL"
 
-ENTRYPOINT ["/home/dataiku/run-dataiku.sh"]
+# ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/
+ENV PATH $PATH:$SPARK_HOME/bin:$HADOOP_HOME/bin
+ENV DKU_DIR /home/dataiku
+
+COPY run.sh /home/dataiku/
+
+EXPOSE $DSS_PORT
+
+ENTRYPOINT [ "/home/dataiku/run.sh" ]
