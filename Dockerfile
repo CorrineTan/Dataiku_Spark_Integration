@@ -57,7 +57,7 @@ RUN mkdir -p /usr/local/lib/R/site-library \
             c('httr', 'RJSONIO', 'dplyr', 'curl', 'IRkernel', 'sparklyr', 'ggplot2', 'gtools', 'tidyr', \
             'rmarkdown', 'base64enc', 'filelock'), \
             '/usr/local/lib/R/site-library', \
-            repos='https://cloud.r-project.org')"
+            repos='http://cloud.r-project.org')"
 
 USER root
 
